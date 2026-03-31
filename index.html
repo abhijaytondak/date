@@ -229,19 +229,20 @@
             noBtn.style.top = newY + 'px';
         }
 
-        // Start roaming autonomously after all texts are done
+        // Start roaming fast after all texts are done
         function startRoaming() {
             isRoaming = true;
             noBtn.innerHTML = "You can't catch me! &#x1F61C;";
             noBtn.style.position = 'fixed';
+            noBtn.style.transition = 'none';
             teleportNoButton();
 
             roamInterval = setInterval(() => {
                 teleportNoButton();
-            }, 900);
+            }, 500);
         }
 
-        // Handle No button clicks — cycle texts, then start roaming
+        // Handle No button clicks — cycle texts in place, then start roaming
         function handleNoClick(e) {
             e.preventDefault();
             e.stopPropagation();
@@ -256,10 +257,6 @@
 
             if (noCount < noTexts.length) {
                 noBtn.innerHTML = noTexts[noCount];
-
-                // Move to a random spot each click
-                noBtn.style.position = 'fixed';
-                teleportNoButton();
 
                 // Grow the Yes button
                 yesScale += 0.15;
