@@ -105,6 +105,8 @@
             display: none;
             text-align: center;
             padding: 16px;
+            position: relative;
+            z-index: 1;
         }
 
         .celebration.active {
@@ -171,7 +173,7 @@
 <body>
 
     <!-- Floating background hearts -->
-    <div id="bg-hearts"></div>
+    <div id="bg-hearts" style="position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;"></div>
 
     <!-- Main question -->
     <div class="container" id="question-screen">
