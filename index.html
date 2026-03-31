@@ -211,6 +211,7 @@
         let noCount = 0;
         let yesScale = 1;
         let roamInterval = null;
+        let isRoaming = false;
 
         // Place the No button at a random spot
         function teleportNoButton() {
@@ -227,44 +228,51 @@
             noBtn.style.top = newY + 'px';
         }
 
-        // Start the No button roaming on its own
+        // Start roaming autonomously after all texts are done
         function startRoaming() {
-            // Initial placement
+            isRoaming = true;
+            noBtn.innerHTML = "You can't catch me! &#x1F61C;";
+            noBtn.style.position = 'fixed';
             teleportNoButton();
 
-            // Roam to a new random position every 1.2s
             roamInterval = setInterval(() => {
                 teleportNoButton();
-
-                // Cycle through texts
-                noCount++;
-                if (noCount < noTexts.length) {
-                    noBtn.innerHTML = noTexts[noCount];
-                } else {
-                    noBtn.innerHTML = noTexts[noTexts.length - 1];
-                }
-
-                // Make Yes button bigger over time
-                yesScale += 0.08;
-                yesBtn.style.transform = `scale(${Math.min(yesScale, 2.5)})`;
-            }, 1200);
+            }, 900);
         }
 
-        // If the No button is somehow clicked/tapped, just teleport it away
-        noBtn.addEventListener('click', function(e) {
+        // Handle No button clicks — cycle texts, then start roaming
+        function handleNoClick(e) {
             e.preventDefault();
             e.stopPropagation();
-            teleportNoButton();
-        });
 
-        noBtn.addEventListener('touchstart', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            teleportNoButton();
-        });
+            if (isRoaming) {
+                // Already roaming — just teleport away
+                teleportNoButton();
+                return;
+            }
 
-        // Start roaming once the page loads
-        startRoaming();
+            noCount++;
+
+            if (noCount < noTexts.length) {
+                noBtn.innerHTML = noTexts[noCount];
+
+                // Move to a random spot each click
+                noBtn.style.position = 'fixed';
+                teleportNoButton();
+
+                // Grow the Yes button
+                yesScale += 0.15;
+                yesBtn.style.transform = `scale(${Math.min(yesScale, 2.5)})`;
+            } else {
+                // All texts exhausted — start roaming
+                yesScale += 0.15;
+                yesBtn.style.transform = `scale(${Math.min(yesScale, 2.5)})`;
+                startRoaming();
+            }
+        }
+
+        noBtn.addEventListener('click', handleNoClick);
+        noBtn.addEventListener('touchstart', handleNoClick);
 
         function sayYes() {
             // Stop roaming
